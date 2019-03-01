@@ -8,9 +8,12 @@ from rpi_rf import RFDevice
 logging.basicConfig(level=logging.INFO, datefmt='%Y-%m-%d %H:%M:%S',
                     format='%(asctime)-15s - [%(levelname)s] %(module)s: %(message)s',)
 
+parser.add_argument('-g', dest='gpio', type=int, default=27,
+                    help="GPIO pin (Default: 17)")
 
 rfdevice = RFDevice(args.gpio)
 rfdevice.enable_tx()
+
 
 if args.protocol:
     protocol = args.protocol
