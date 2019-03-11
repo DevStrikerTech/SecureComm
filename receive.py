@@ -18,8 +18,7 @@ def exithandler(signal, frame):
 logging.basicConfig(level=logging.INFO, datefmt='%Y-%m-%d %H:%M:%S',
                     format='%(asctime)-15s - [%(levelname)s] %(module)s: %(message)s', )
 
-
-
+signal.signal(signal.SIGINT, exithandler)
 rfdevice = RFDevice(args.gpio)
 rfdevice.enable_rx()
 timestamp = None
