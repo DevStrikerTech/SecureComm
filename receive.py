@@ -26,6 +26,7 @@ signal.signal(signal.SIGINT, exithandler)
 rfdevice = RFDevice(args.gpio)
 rfdevice.enable_rx()
 timestamp = None
+logFile = open("log.txt", "w+")
 if args.gpio:
     gpio = args.gpio
 else:
@@ -34,8 +35,11 @@ logging.info("Listening for codes on GPIO " + str(gpio))
 while True:
     if rfdevice.rx_code_timestamp != timestamp:
         timestamp = rfdevice.rx_code_timestamp
+        logF = open("log.txt", "a")
         logging.info("CODE: " + str(rfdevice.rx_code) +
                      " [pulselength " + str(rfdevice.rx_pulselength) +
                      ", protocol " + str(rfdevice.rx_proto) + "]")
+        logF.write(str(rfdevice.rx_code) +","+ str(rfdevice.rx_pulselength) +","+ str(rfdevice.rx_proto) +"\n")
     time.sleep(0.01)
 rfdevice.cleanup()
+logF.close()
