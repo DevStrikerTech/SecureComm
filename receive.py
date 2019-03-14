@@ -27,6 +27,7 @@ rfdevice = RFDevice(args.gpio)
 rfdevice.enable_rx()
 timestamp = None
 logFile = open("log.txt", "w+")
+logFile.write("CODE,PULSELENGTH,PROTOCOL\n")
 if args.gpio:
     gpio = args.gpio
 else:
