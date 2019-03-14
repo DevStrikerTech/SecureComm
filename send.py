@@ -15,7 +15,7 @@ parser.add_argument('-g', dest='gpio', type=int, default=17,
                     help="GPIO pin (Default: 17)")
 parser.add_argument('-p', dest='protocol', type=int, default=1, help="Protocol. Default: 1")
 parser.add_argument('-t', dest='pulselength', type=int, default=350, help="Pulse length, Default: 350")
-parser.add_argument('code', metavar='CODE', type=int, help="Decimal code to send") 
+parser.add_argument('-c', dest='code', type=int, default=0, help="Decimal code to send") 
 parser.add_argument('-f', dest='logFile', type=str, help="File from program sends the codes")
 args = parser.parse_args()
 
