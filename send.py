@@ -51,10 +51,11 @@ if args.logFile:
             if line_count == 0:
                 if code == "CODE" and pulselength == "PULSELENGTH" and protocol == "PROTOCOL":
                     line_count += 1
-                    sendSignal(code, protocol, pulselength)
                 else:
                     print("Wrong file type.")
-            sendSignal(code, protocol, pulselength)
+            if line_count >= 0 and row[0] != "CODE":
+                sendSignal(code, protocol, pulselength)
+                line_count += 1
 else:
     sendSignal(args.code, args.protocol, args.pulselength)
         
