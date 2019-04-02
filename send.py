@@ -30,33 +30,36 @@ def sendSignal(code, protocol, pulselength):
     rfdevice.tx_code(int(code), int(protocol), int(pulselength))
     rfdevice.cleanup()
     time.sleep(1)
-
-if args.protocol:
-    protocol = args.protocol
-else:
-    protocol = "default"
-if args.pulselength:
-    pulselength = args.pulselength
-else:
-    pulselength = "default"
-if args.logFile:
-    logFile = args.logFile
-    with open(logFile) as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter=',')
-        line_count = 0
-        for row in csv_reader:
-            code = row[0]
-            pulselength = row[1]
-            protocol = row[2]
-            if line_count == 0:
-                if code == "CODE" and pulselength == "PULSELENGTH" and protocol == "PROTOCOL":
+try:
+    if args.protocol:
+        protocol = args.protocol
+    else:
+        protocol = "default"
+    if args.pulselength:
+        pulselength = args.pulselength
+    else:
+        pulselength = "default"
+    if args.logFile:
+        logFile = args.logFile
+        with open(logFile) as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=',')
+            line_count = 0
+            for row in csv_reader:
+                code = row[0]
+                pulselength = row[1]
+                protocol = row[2]
+                if line_count == 0:
+                    if code == "CODE" and pulselength == "PULSELENGTH" and protocol == "PROTOCOL":
+                        line_count += 1
+                    else:
+                        print("Wrong file type.")
+                if line_count >= 0 and code != "CODE":
+                    sendSignal(code, protocol, pulselength)
                     line_count += 1
-                else:
-                    print("Wrong file type.")
-            if line_count >= 0 and code != "CODE":
-                sendSignal(code, protocol, pulselength)
-                line_count += 1
-else:
-    sendSignal(args.code, args.protocol, args.pulselength)
+    else:
+        sendSignal(args.code, args.protocol, args.pulselength)
+except KeyboardInterrupt:
+    print("CTRL + C pressed, stopping…")
+    
         
 

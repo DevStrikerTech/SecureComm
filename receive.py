@@ -5,14 +5,22 @@ import signal
 import sys
 import time
 import logging
+import subprocess
 
 from rpi_rf import RFDevice
 
 rfdevice = None
 
+logFile = open("log.txt", "w+")
+
 # pylint: disable=unused-argument
 def exithandler(signal, frame):
     rfdevice.cleanup()
+    answer = input("Closing... Do you like run Send program with collected signals? Enter yes to run. \n")
+    if answer == "yes" :
+        logFile.close()
+        subprocess.call(" ./send.py -f log.txt", shell=True)
+        
     sys.exit(0)
 
 parser = argparse.ArgumentParser(description='Receive a decimal code from the target device')
@@ -26,7 +34,6 @@ signal.signal(signal.SIGINT, exithandler)
 rfdevice = RFDevice(args.gpio)
 rfdevice.enable_rx()
 timestamp = None
-logFile = open("log.txt", "w+")
 logFile.write("CODE,PULSELENGTH,PROTOCOL\n")
 if args.gpio:
     gpio = args.gpio
@@ -41,6 +48,7 @@ while True:
                      " [pulselength " + str(rfdevice.rx_pulselength) +
                      ", protocol " + str(rfdevice.rx_proto) + "]")
         logF.write(str(rfdevice.rx_code) +","+ str(rfdevice.rx_pulselength) +","+ str(rfdevice.rx_proto) +"\n")
+        logF.close()
     time.sleep(0.01)
 rfdevice.cleanup()
-logF.close()
+logFile.close()
