@@ -44,18 +44,25 @@ try:
         with open(logFile) as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=',')
             line_count = 0
-            for row in csv_reader:
-                code = row[0]
-                pulselength = row[1]
-                protocol = row[2]
-                if line_count == 0:
-                    if code == "CODE" and pulselength == "PULSELENGTH" and protocol == "PROTOCOL":
+            try:
+                for row in csv_reader:
+                    code = row[0]
+                    pulselength = row[1]
+                    protocol = row[2]
+                    if line_count == 0:
+                        if code == "CODE" and pulselength == "PULSELENGTH" and protocol == "PROTOCOL":
+                            line_count += 1
+                        else:
+                            print("Wrong file type.")
+                    if line_count >= 0 and code != "CODE":
+                        sendSignal(code, protocol, pulselength)
                         line_count += 1
-                    else:
-                        print("Wrong file type.")
-                if line_count >= 0 and code != "CODE":
-                    sendSignal(code, protocol, pulselength)
-                    line_count += 1
+            except KeyboardInterrupt:
+                print("CTRL + C pressed, stopping…")
+            except IOError:
+                print("An error occured trying to read file.")
+            except IndexError:
+                print("Please check file. Empty row.")
     else:
         sendSignal(args.code, args.protocol, args.pulselength)
 except KeyboardInterrupt:
