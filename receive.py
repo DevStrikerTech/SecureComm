@@ -11,13 +11,13 @@ from rpi_rf import RFDevice
 
 rfdevice = None
 
-
+logFile = open("log.txt", "r")
 
 # pylint: disable=unused-argument
 def exithandler(signal, frame):
     rfdevice.cleanup()
     logFile = open("log.txt", "a+")
-    answer = input("Closing... Do you like run Send program with collected signals? Enter yes to run. \n")
+    answer = input("Closing...\n Do you like run Send program with collected signals?\n Enter yes to run. \n")
     if answer == "yes" :
         logFile.close()
         subprocess.call(" ./send.py -f log.txt", shell=True)
@@ -45,12 +45,12 @@ logging.info("Listening for codes on GPIO " + str(gpio))
 while True:
     if rfdevice.rx_code_timestamp != timestamp:
         timestamp = rfdevice.rx_code_timestamp
-        logF = open("log.txt", "a")
+        logFile = open("log.txt", "a")
         logging.info("CODE: " + str(rfdevice.rx_code) +
                      " [pulselength " + str(rfdevice.rx_pulselength) +
                      ", protocol " + str(rfdevice.rx_proto) + "]")
-        logF.write(str(rfdevice.rx_code) +","+ str(rfdevice.rx_pulselength) +","+ str(rfdevice.rx_proto) +"\n")
-        logF.close()
+        logFile.write(str(rfdevice.rx_code) +","+ str(rfdevice.rx_pulselength) +","+ str(rfdevice.rx_proto) +"\n")
+        logFile.close()
     time.sleep(0.01)
 rfdevice.cleanup()
 logFile.close()
